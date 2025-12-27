@@ -780,7 +780,7 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
                 variant={
                   project.status === 'FEATURED'
                     ? 'cyan'
-                    : project.status === 'IN PRODUCTION'
+                    : project.status === 'En_Producción'
                     ? 'purple'
                     : 'green'
                 }

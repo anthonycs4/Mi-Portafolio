@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from './Button';
 import { Badge } from './Badge';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 // 🔧 Tech stack (enfocado a lo que realmente usas / has usado)
 const techStack = [
@@ -25,6 +26,7 @@ export function HeroSection() {
   const [typedLines, setTypedLines] = useState<string[]>(['', '', '']);
   const [currentLine, setCurrentLine] = useState(0);
   const [currentChar, setCurrentChar] = useState(0);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // ✅ Scroll suave a la galería
   const goToProjects = () => {
@@ -65,8 +67,11 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/10 via-deep-space to-neon-cyan/10" />
 
       {/* Spotlight effect */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-neon-cyan/5 rounded-full blur-[120px]" />
-
+<div 
+      className={`absolute top-0 left-1/2 -translate-x-1/2 h-[400px] bg-neon-cyan/5 rounded-full blur-[120px] ${
+        isMobile ? 'w-[300px]' : 'w-[800px]'
+      }`} 
+    />
       {/* Main content container */}
       <div className="relative h-full flex items-center px-12 lg:px-16">
         <div className="w-full grid grid-cols-1 lg:grid-cols-[60%_40%] gap-12 items-center">
