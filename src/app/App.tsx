@@ -68,7 +68,7 @@ export default function App() {
       </div>
       
       {/* Project Gallery */}
-      <div id="projects" className="relative max-w-7xl mx-auto py-16 px-8">
+      <div id="projects" className="relative max-w-7xl mx-auto py-20 px-8">
         <div className="text-center mb-12">
           <h2 className="mb-4">Proyectos</h2>
         </div>

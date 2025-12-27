@@ -180,48 +180,72 @@ export function CertificateVault() {
       </div>
 
       {/* Category Breakdown with Bars */}
-      <div className="mb-12">
-        <div className="flex items-center justify-between mb-6">
-          <h3 className="text-text-primary font-mono">Especializaciones</h3>
-          <button
-            onClick={() => window.open(driveUrl, '_blank')}
-            className="px-4 py-2 rounded-lg bg-glass-fill border border-glass-border hover:border-neon-cyan/50 flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-all duration-300 group"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12.945 1.379l-.652.763c-.033-.006-.073-.007-.11-.011V.335c0-.186-.162-.335-.359-.335l-3.655.001h-.002c-.197 0-.359.15-.359.335V2.14c-.036.004-.076.005-.109.011l-.652-.763C6.64.925 6.015.919 5.542 1.335L.284 5.679c-.471.416-.477 1.047-.021 1.493l4.259 4.163c.456.446 1.218.556 1.803.259l.652-.331c.017.027.033.055.053.08l8.856 8.665c.333.355.833.565 1.313.565h.003c.479 0 .98-.209 1.313-.564l3.844-3.756c.667-.652.667-1.74 0-2.391L12.945 1.379z"/>
-            </svg>
-            <span className="text-sm font-mono">Ver Certificados</span>
-          </button>
-        </div>
+  
+{/* Category Breakdown with Bars */}
+<div className="mb-12">
+  <div className="flex items-center justify-between mb-6 gap-4">
+    {/* ✅ Título que NO se desborda */}
+    <h3 className="text-text-primary font-mono min-w-0 truncate">
+      Especializaciones
+    </h3>
 
-        <div className="space-y-4">
-          {Object.entries(certificateStats.byCategory).map(([category, count], index) => {
-            const colors = ['cyan', 'green', 'purple', 'cyan', 'purple', 'green'];
-            const color = colors[index % colors.length];
-            const percentage = (count / certificateStats.total) * 100;
-            
-            return (
-              <div key={category} className="group">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-mono text-text-primary">{category}</span>
-                  <span className="text-sm font-mono text-text-secondary">{count} certificates</span>
-                </div>
-                <div className="relative h-3 bg-glass-fill rounded-full overflow-hidden border border-glass-border group-hover:border-neon-${color}/50 transition-all duration-300">
-                  <div
-                    className={`h-full bg-gradient-to-r from-neon-${color}/80 to-neon-${color}/40 rounded-full transition-all duration-1000 ease-out relative`}
-                    style={{
-                      width: `${percentage}%`,
-                      boxShadow: `0 0 20px rgba(${color === 'cyan' ? '0, 240, 255' : color === 'green' ? '0, 255, 136' : '178, 75, 243'}, 0.4)`
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+    {/* ✅ Botón oculto en mobile */}
+    <button
+      onClick={() => window.open(driveUrl, '_blank')}
+      className="hidden sm:flex px-4 py-2 rounded-lg bg-glass-fill border border-glass-border hover:border-neon-cyan/50 items-center gap-2 text-text-secondary hover:text-neon-cyan transition-all duration-300 group"
+    >
+      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12.945 1.379l-.652.763c-.033-.006-.073-.007-.11-.011V.335c0-.186-.162-.335-.359-.335l-3.655.001h-.002c-.197 0-.359.15-.359.335V2.14c-.036.004-.076.005-.109.011l-.652-.763C6.64.925 6.015.919 5.542 1.335L.284 5.679c-.471.416-.477 1.047-.021 1.493l4.259 4.163c.456.446 1.218.556 1.803.259l.652-.331c.017.027.033.055.053.08l8.856 8.665c.333.355.833.565 1.313.565h.003c.479 0 .98-.209 1.313-.564l3.844-3.756c.667-.652.667-1.74 0-2.391L12.945 1.379z" />
+      </svg>
+      <span className="text-sm font-mono whitespace-nowrap">Ver Certificados</span>
+    </button>
+  </div>
+
+  <div className="space-y-4">
+    {Object.entries(certificateStats.byCategory).map(([category, count], index) => {
+      const colors = ['cyan', 'green', 'purple', 'cyan', 'purple', 'green'];
+      const color = colors[index % colors.length];
+      const percentage = (count / certificateStats.total) * 100;
+
+      return (
+        <div key={category} className="group">
+          <div className="flex items-center justify-between mb-2 gap-3">
+            {/* ✅ Evita overflow del label */}
+            <span className="text-sm font-mono text-text-primary min-w-0 truncate">
+              {category}
+            </span>
+
+            {/* ✅ En mobile puede partir a 2 líneas si hace falta */}
+            <span className="text-sm font-mono text-text-secondary text-right leading-tight">
+              {count} certificates
+            </span>
+          </div>
+
+          <div
+            className={`relative h-3 bg-glass-fill rounded-full overflow-hidden border border-glass-border group-hover:border-neon-${color}/50 transition-all duration-300`}
+          >
+            <div
+              className={`h-full bg-gradient-to-r from-neon-${color}/80 to-neon-${color}/40 rounded-full transition-all duration-1000 ease-out relative`}
+              style={{
+                width: `${percentage}%`,
+                boxShadow: `0 0 20px rgba(${
+                  color === 'cyan'
+                    ? '0, 240, 255'
+                    : color === 'green'
+                    ? '0, 255, 136'
+                    : '178, 75, 243'
+                }, 0.4)`,
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+            </div>
+          </div>
         </div>
-      </div>
+      );
+    })}
+  </div>
+</div>
+
 
       {/* Holographic Scanner CTA */}
       <HolographicScannerCTA

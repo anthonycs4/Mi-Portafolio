@@ -112,7 +112,7 @@ export function FloatingNavbar() {
             {/* Logo/Name */}
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center font-bold text-white shadow-lg">
-                AC
+                <img src="/favicon.svg" alt="" />
               </div>
               <span className="hidden sm:block font-bold text-text-primary">Anthony Cano</span>
             </div>

@@ -36,7 +36,7 @@ interface Project {
   title: string;
   description: string;
   thumbnail: string;
-  thumbnailFit?: 'pan' | 'contain'; // ✅ NUEVO
+  thumbnailFit?: 'pan' | 'contain';
   status: ProjectStatus;
   category: ProjectCategory[];
   techStack: TechStack[];
@@ -50,6 +50,7 @@ interface Project {
     keyDecisions: { title: string; description: string }[];
   };
 }
+
 const projects: Project[] = [
   {
     id: '1',
@@ -80,8 +81,7 @@ const projects: Project[] = [
         },
         {
           title: 'Enfoque en rendimiento/SEO',
-          description:
-            'Optimicé estructura y carga para una landing rápida y clara.',
+          description: 'Optimicé estructura y carga para una landing rápida y clara.',
         },
       ],
     },
@@ -183,8 +183,7 @@ const projects: Project[] = [
         },
         {
           title: 'Separación de módulos',
-          description:
-            'Estructuré vistas y lógica para facilitar mantenimiento y escalado.',
+          description: 'Estructuré vistas y lógica para facilitar mantenimiento y escalado.',
         },
       ],
     },
@@ -193,8 +192,7 @@ const projects: Project[] = [
   {
     id: '5',
     title: 'Netdreams Sudoku — Landing + Press Kit',
-    description:
-      'Landing promocional y press kit del videojuego Netdreams Sudoku.',
+    description: 'Landing promocional y press kit del videojuego Netdreams Sudoku.',
     thumbnail: sudokuThumb,
     status: 'Completado',
     category: ['Landing', 'Web'],
@@ -207,10 +205,8 @@ const projects: Project[] = [
     caseStudy: {
       problem:
         'El juego necesitaba una web clara y un press kit para comunicación y difusión.',
-      solution:
-        'Desarrollé landing + press kit con estructura de recursos descargables.',
-      impact:
-        'Mejor soporte de marketing y prensa; recursos listos para medios.',
+      solution: 'Desarrollé landing + press kit con estructura de recursos descargables.',
+      impact: 'Mejor soporte de marketing y prensa; recursos listos para medios.',
       keyDecisions: [
         {
           title: 'Jerarquía visual',
@@ -245,13 +241,11 @@ const projects: Project[] = [
       keyDecisions: [
         {
           title: 'Storytelling de confianza',
-          description:
-            'Bloques centrados en credenciales, equipo médico y proceso digitalizado.',
+          description: 'Bloques centrados en credenciales, equipo médico y proceso digitalizado.',
         },
         {
           title: 'CTAs visibles',
-          description:
-            'Llamadas a acción repetidas sin saturar, para mejorar conversión.',
+          description: 'Llamadas a acción repetidas sin saturar, para mejorar conversión.',
         },
       ],
     },
@@ -347,8 +341,7 @@ const projects: Project[] = [
       keyDecisions: [
         {
           title: 'Entrega end-to-end',
-          description:
-            'Cobertura completa del ciclo: diseño → implementación → pruebas.',
+          description: 'Cobertura completa del ciclo: diseño → implementación → pruebas.',
         },
       ],
     },
@@ -372,8 +365,7 @@ const projects: Project[] = [
         'Sistema interno con accesos restringidos que requería soporte, correcciones y mantenimiento.',
       solution:
         'Brindé soporte sobre Laravel/MySQL, corrigiendo issues y asegurando continuidad operativa.',
-      impact:
-        'Mayor estabilidad del sistema interno y continuidad de procesos.',
+      impact: 'Mayor estabilidad del sistema interno y continuidad de procesos.',
       keyDecisions: [
         {
           title: 'Cambios controlados',
@@ -390,7 +382,7 @@ const projects: Project[] = [
     description:
       'Plataforma de caregiving multi-tenant: BD en Postgres, backend en NestJS, app móvil e integración completa (en progreso).',
     thumbnail: careguardThumb,
-    thumbnailFit: 'contain', // ✅ se ajusta (sin pan)
+    thumbnailFit: 'contain',
     status: 'En_Producción',
     category: ['Featured', 'FullStack', 'API', 'Web'],
     techStack: [
@@ -422,7 +414,6 @@ const projects: Project[] = [
   },
 ];
 
-
 // ✅ Hook: calcula overflow horizontal y setea --pan-x (con opción de desactivar)
 function useAutoPan(disabled = false) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -437,19 +428,17 @@ function useAutoPan(disabled = false) {
 
     const apply = () => {
       const wrapW = wrap.clientWidth;
-      const imgW = img.scrollWidth; // ancho real renderizado
+      const imgW = img.scrollWidth;
       const overflowX = imgW - wrapW;
 
-      // Si no hay overflow, no animamos (se queda quieta)
       if (overflowX <= 0) {
         img.style.setProperty('--pan-x', '0px');
         img.style.animation = 'none';
         return;
       }
 
-      // mueve hacia la izquierda para mostrar el final
       img.style.setProperty('--pan-x', `-${overflowX}px`);
-      img.style.animation = ''; // vuelve a usar la animación definida por CSS
+      img.style.animation = '';
     };
 
     if (img.complete) apply();
@@ -467,9 +456,34 @@ function useAutoPan(disabled = false) {
   return { wrapRef, imgRef };
 }
 
+// ✅ Helper: detectar mobile sin hooks externos
+function useIsMobile(breakpointPx = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${breakpointPx}px)`);
+
+    const update = () => setIsMobile(mq.matches);
+    update();
+
+    // compat
+    if (mq.addEventListener) mq.addEventListener('change', update);
+    else mq.addListener(update);
+
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', update);
+      else mq.removeListener(update);
+    };
+  }, [breakpointPx]);
+
+  return isMobile;
+}
+
 export function ProjectGallery() {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>('Todo');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const isMobile = useIsMobile(768);
 
   const categories: ProjectCategory[] = [
     'Todo',
@@ -487,9 +501,9 @@ export function ProjectGallery() {
       : projects.filter((project) => project.category.includes(activeCategory));
 
   return (
-    <section className="relative w-full max-w-[1400px] mx-auto"  id="proyectos" >
-      {/* Filter tabs */}
-      <div className="flex items-center gap-3 mb-12 flex-wrap">
+    <section className="relative w-full max-w-[1400px] mx-auto" id="proyectos">
+      {/* Filter tabs (oculto en mobile) */}
+      <div className="hidden md:flex items-center gap-3 mb-12 flex-wrap">
         {categories.map((category) => (
           <button
             key={category}
@@ -511,13 +525,23 @@ export function ProjectGallery() {
           <ProjectCard
             key={project.id}
             project={project}
-            onClick={() => setSelectedProject(project)}
+            isMobile={isMobile}
+            onClick={() => {
+              // ✅ MOBILE: no abre modal, abre link
+              if (isMobile) {
+                const url = project.live || project.github;
+                if (url) window.open(url, '_blank');
+                return;
+              }
+              // ✅ DESKTOP: abre modal
+              setSelectedProject(project);
+            }}
           />
         ))}
       </div>
 
-      {/* Case study modal */}
-      {selectedProject && (
+      {/* ✅ Modal solo desktop */}
+      {!isMobile && selectedProject && (
         <CaseStudyModal
           project={selectedProject}
           onClose={() => setSelectedProject(null)}
@@ -530,10 +554,10 @@ export function ProjectGallery() {
 interface ProjectCardProps {
   project: Project;
   onClick: () => void;
+  isMobile: boolean;
 }
 
-function ProjectCard({ project, onClick }: ProjectCardProps) {
-  // ✅ si es contain, NO hay pan
+function ProjectCard({ project, onClick, isMobile }: ProjectCardProps) {
   const shouldPan = project.thumbnailFit !== 'contain';
   const { wrapRef, imgRef } = useAutoPan(!shouldPan);
 
@@ -553,15 +577,13 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
 
       {/* Full image - 90% of card */}
       <div className="relative w-full h-[90%] overflow-hidden">
-        {/* fondo suave para que se vea bien en cualquier thumbnail */}
         <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/10 to-neon-purple/10" />
 
-        {/* “ventana” */}
         <div
           ref={wrapRef}
           className={
             shouldPan
-              ? 'relative z-10 w-full h-full overflow-hidden' // ✅ sin flex/centrado
+              ? 'relative z-10 w-full h-full overflow-hidden'
               : 'relative z-10 w-full h-full overflow-hidden flex items-center justify-center'
           }
         >
@@ -571,12 +593,11 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
             alt={project.title}
             className={
               shouldPan
-                ? 'project-pan-img absolute left-0 top-0 h-full w-auto max-w-none block' // ✅ anclado a la izquierda
+                ? 'project-pan-img absolute left-0 top-0 h-full w-auto max-w-none block'
                 : 'h-full w-full object-contain block'
             }
           />
         </div>
-
 
         {/* Status badge - always visible */}
         <div className="absolute top-4 right-4 z-20">
@@ -594,20 +615,17 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           </Badge>
         </div>
 
-        {/* Info overlay - appears on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-deep-space via-deep-space/95 to-deep-space/20 opacity-0 group-hover:opacity-100 transition-all duration-500 z-10">
+        {/* Info overlay - solo desktop (en mobile no tiene sentido si no hay modal) */}
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-deep-space via-deep-space/95 to-deep-space/20 opacity-0 group-hover:opacity-100 transition-all duration-500 z-10">
           <div className="absolute inset-0 p-6 flex flex-col justify-end">
-            {/* Title */}
             <h3 className="text-text-primary mb-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
               {project.title}
             </h3>
 
-            {/* Description */}
             <p className="text-sm text-text-secondary leading-relaxed line-clamp-2 mb-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
               {project.description}
             </p>
 
-            {/* Tech stack */}
             <div className="flex flex-wrap gap-2 mb-4 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-100">
               {project.techStack.slice(0, 4).map((tech) => (
                 <div
@@ -623,7 +641,6 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
               ))}
             </div>
 
-            {/* Bottom buttons */}
             <div className="flex items-center gap-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-150">
               <div className="flex-1 px-4 py-2 rounded-lg bg-neon-cyan text-deep-space text-center text-sm font-medium shadow-[0_0_20px_rgba(0,240,255,0.4)]">
                 Vista caso de estudio
@@ -637,11 +654,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
                   }}
                   className="w-9 h-9 rounded-lg bg-glass-hover border border-glass-border flex items-center justify-center text-text-secondary hover:text-neon-cyan hover:border-neon-cyan/50 transition-all duration-300"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                   </svg>
                 </button>
@@ -655,12 +668,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
                   }}
                   className="w-9 h-9 rounded-lg bg-glass-hover border border-glass-border flex items-center justify-center text-text-secondary hover:text-neon-purple hover:border-neon-purple/50 transition-all duration-300"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -675,7 +683,7 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
         </div>
       </div>
 
-      {/* Bottom 10% - minimal info always visible */}
+      {/* Bottom 10% */}
       <div className="relative h-[10%] p-4 flex items-center justify-between bg-glass-fill border-t border-glass-border">
         <span className="text-sm font-medium text-text-primary truncate">
           {project.title}
@@ -686,16 +694,11 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </div>
 
-      {/* CSS del pan (por card) */}
+      {/* CSS del pan */}
       <style>{`
         @keyframes panX {
           0%   { transform: translateX(0); }
@@ -721,6 +724,7 @@ interface CaseStudyModalProps {
   project: Project;
   onClose: () => void;
 }
+
 function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
   const [expandedDecision, setExpandedDecision] = useState<number | null>(null);
 
@@ -729,56 +733,65 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-deep-space/95 backdrop-blur-2xl animate-modal-fade-in"
       onClick={onClose}
     >
-      {/* Animated background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-cyan/10 rounded-full blur-[120px] animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/10 rounded-full blur-[120px] animate-pulse-slow" style={{ animationDelay: '1s' }} />
+        <div
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/10 rounded-full blur-[120px] animate-pulse-slow"
+          style={{ animationDelay: '1s' }}
+        />
       </div>
 
       <div
         className="relative w-full max-w-[900px] max-h-[90vh] bg-gradient-to-br from-space-light/95 to-deep-space/95 backdrop-blur-2xl border border-neon-cyan/40 rounded-3xl shadow-[0_0_80px_rgba(0,240,255,0.3)] overflow-hidden animate-modal-scale-in"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Scanline effect overlay */}
         <div className="absolute inset-0 pointer-events-none z-30 opacity-10">
           <div className="scanline-modal" />
         </div>
 
-        {/* Corner brackets decoration */}
         <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-neon-cyan pointer-events-none z-20" />
         <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-neon-cyan pointer-events-none z-20" />
         <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-neon-cyan pointer-events-none z-20" />
         <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-neon-cyan pointer-events-none z-20" />
 
-        {/* Header with glass effect */}
         <div className="relative p-4 border-b border-neon-cyan/30 bg-gradient-to-r from-neon-cyan/5 to-neon-purple/5">
-          {/* Close button */}
           <button
             onClick={onClose}
             className="absolute top-6 right-6 w-11 h-11 rounded-xl bg-glass-hover backdrop-blur-xl border border-glass-border flex items-center justify-center text-text-secondary hover:text-neon-cyan hover:border-neon-cyan/70 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all duration-300 group z-20"
           >
-            <svg className="w-6 h-6 transition-transform duration-300 group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg
+              className="w-6 h-6 transition-transform duration-300 group-hover:rotate-90"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          
+
           <div className="space-y-4 pr-16">
             <div className="flex items-center gap-3">
               <div className="px-3 py-1 rounded-full bg-neon-cyan/20 border border-neon-cyan/50 backdrop-blur-xl">
-                <span className="text-xs font-mono text-neon-cyan font-medium">CASO ESTUDIO</span>
+                <span className="text-xs font-mono text-neon-cyan font-medium">
+                  CASO ESTUDIO
+                </span>
               </div>
-              <Badge variant={
-                project.status === 'FEATURED' ? 'cyan' :
-                project.status === 'IN PRODUCTION' ? 'purple' :
-                'green'
-              } className="font-mono text-xs">
+              <Badge
+                variant={
+                  project.status === 'FEATURED'
+                    ? 'cyan'
+                    : project.status === 'IN PRODUCTION'
+                    ? 'purple'
+                    : 'green'
+                }
+                className="font-mono text-xs"
+              >
                 {project.status}
               </Badge>
             </div>
             <h2 className="text-text-primary text-3xl">{project.title}</h2>
             <p className="text-text-secondary leading-relaxed">{project.description}</p>
-            
-            {/* Tech stack pills */}
+
             <div className="flex flex-wrap gap-2 pt-2">
               {project.techStack.map((tech) => (
                 <div
@@ -797,15 +810,12 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
           </div>
         </div>
 
-        {/* Scrollable content with custom scrollbar */}
         <div className="custom-scrollbar overflow-y-auto max-h-[calc(90vh-280px)] p-8 space-y-8">
-          {/* Problem → Solution → Impact with enhanced design */}
           <div className="grid grid-cols-1 gap-6">
-            {/* Problem */}
             <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-neon-purple/10 to-transparent backdrop-blur-xl border border-neon-purple/30 hover:border-neon-purple/60 transition-all duration-500 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neon-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute top-0 right-0 w-32 h-32 bg-neon-purple/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-xl bg-neon-purple/20 backdrop-blur-xl border border-neon-purple/40 flex items-center justify-center shadow-[0_0_20px_rgba(178,75,243,0.2)] group-hover:shadow-[0_0_30px_rgba(178,75,243,0.4)] transition-all duration-500">
@@ -822,11 +832,10 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
               </div>
             </div>
 
-            {/* Solution */}
             <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-neon-cyan/10 to-transparent backdrop-blur-xl border border-neon-cyan/30 hover:border-neon-cyan/60 transition-all duration-500 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-xl bg-neon-cyan/20 backdrop-blur-xl border border-neon-cyan/40 flex items-center justify-center shadow-[0_0_20px_rgba(0,240,255,0.2)] group-hover:shadow-[0_0_30px_rgba(0,240,255,0.4)] transition-all duration-500">
@@ -843,11 +852,10 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
               </div>
             </div>
 
-            {/* Impact */}
             <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-neon-green/10 to-transparent backdrop-blur-xl border border-neon-green/30 hover:border-neon-green/60 transition-all duration-500 overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-neon-green/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute top-0 right-0 w-32 h-32 bg-neon-green/10 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
+
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-xl bg-neon-green/20 backdrop-blur-xl border border-neon-green/40 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,136,0.2)] group-hover:shadow-[0_0_30px_rgba(0,255,136,0.4)] transition-all duration-500">
@@ -865,16 +873,12 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
             </div>
           </div>
 
-          {/* Action buttons with glow effects */}
           <div className="flex gap-4 pt-4">
             {project.github && (
               <button
                 onClick={() => window.open(project.github, '_blank')}
                 className="flex-1 px-6 py-4 rounded-xl bg-glass-fill backdrop-blur-xl border border-glass-border hover:border-neon-cyan/50 flex items-center justify-center gap-2 text-text-primary hover:text-neon-cyan transition-all duration-300 group hover:shadow-[0_0_30px_rgba(0,240,255,0.2)]"
               >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
                 <span className="font-mono text-sm font-medium">View Source</span>
               </button>
             )}
@@ -883,9 +887,6 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
                 onClick={() => window.open(project.live, '_blank')}
                 className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple border border-neon-cyan/50 flex items-center justify-center gap-2 text-deep-space font-medium transition-all duration-300 hover:shadow-[0_0_40px_rgba(0,240,255,0.5)] hover:scale-[1.02] group"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
                 <span className="font-mono text-sm font-bold">Ver</span>
               </button>
             )}
@@ -895,41 +896,18 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
 
       <style>{`
         @keyframes modal-fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
 
         @keyframes modal-scale-in {
-          from {
-            opacity: 0;
-            transform: scale(0.95) translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
+          from { opacity: 0; transform: scale(0.95) translateY(20px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         @keyframes scanline-modal {
-          0% {
-            transform: translateY(-100%);
-          }
-          100% {
-            transform: translateY(400%);
-          }
-        }
-
-        @keyframes float-slow {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-15px);
-          }
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(400%); }
         }
 
         .animate-modal-fade-in {
@@ -953,33 +931,22 @@ function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
           animation: scanline-modal 4s linear infinite;
         }
 
-        .animate-float-slow {
-          animation: float-slow 4s ease-in-out infinite;
-        }
-
-        /* Custom scrollbar styling */
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-        }
-
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: rgba(10, 10, 15, 0.5);
           border-radius: 10px;
           margin: 8px 0;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: linear-gradient(180deg, #00f0ff 0%, #b24bf3 100%);
           border-radius: 10px;
           box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(180deg, #00f0ff 30%, #b24bf3 100%);
           box-shadow: 0 0 15px rgba(0, 240, 255, 0.7);
         }
 
-        /* Firefox scrollbar */
         .custom-scrollbar {
           scrollbar-width: thin;
           scrollbar-color: #00f0ff rgba(10, 10, 15, 0.5);
