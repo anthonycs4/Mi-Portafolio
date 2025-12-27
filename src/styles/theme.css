@@ -1,0 +1,234 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Typography */
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --font-size: 16px;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.5rem;
+  --text-4xl: 3rem;
+
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Sci-Fi Color Palette - Dark Mode */
+  --deep-space: #0a0a0f;
+  --space-lighter: #14141f;
+  --space-light: #1e1e2e;
+  
+  /* Neon Accents */
+  --neon-cyan: #00f0ff;
+  --neon-purple: #b24bf3;
+  --neon-green: #00ff88;
+  
+  /* Neon with opacity for glows */
+  --neon-cyan-glow: rgba(0, 240, 255, 0.4);
+  --neon-purple-glow: rgba(178, 75, 243, 0.4);
+  --neon-green-glow: rgba(0, 255, 136, 0.4);
+  
+  /* Glass */
+  --glass-fill: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+  
+  /* Text Colors */
+  --text-primary: #e0e0e0;
+  --text-secondary: #808080;
+  --text-tertiary: #505050;
+  
+  /* Core Design Tokens */
+  --background: var(--deep-space);
+  --foreground: var(--text-primary);
+  --card: var(--glass-fill);
+  --card-foreground: var(--text-primary);
+  --popover: var(--space-light);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--neon-cyan);
+  --primary-foreground: var(--deep-space);
+  --secondary: var(--glass-fill);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--space-lighter);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--neon-purple);
+  --accent-foreground: var(--deep-space);
+  --destructive: #ff4444;
+  --destructive-foreground: #ffffff;
+  --border: var(--glass-border);
+  --input: var(--glass-border);
+  --input-background: var(--glass-fill);
+  --ring: var(--neon-cyan);
+  
+  /* Spacing - 8px base unit */
+  --space-1: 0.5rem;   /* 8px */
+  --space-2: 1rem;     /* 16px */
+  --space-3: 1.5rem;   /* 24px */
+  --space-4: 2rem;     /* 32px */
+  --space-6: 3rem;     /* 48px */
+  --space-8: 4rem;     /* 64px */
+  --space-12: 6rem;    /* 96px */
+  
+  /* Border Radius */
+  --radius: 0.75rem;
+  
+  /* Shadows */
+  --shadow-soft: 0px 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow-cyan: 0px 0px 20px var(--neon-cyan-glow), 0px 0px 40px var(--neon-cyan-glow);
+  --shadow-glow-purple: 0px 0px 20px var(--neon-purple-glow), 0px 0px 40px var(--neon-purple-glow);
+  --shadow-glow-green: 0px 0px 20px var(--neon-green-glow), 0px 0px 40px var(--neon-green-glow);
+}
+
+@theme inline {
+  /* Font Families */
+  --font-family-sans: var(--font-sans);
+  --font-family-heading: var(--font-heading);
+  --font-family-mono: var(--font-mono);
+  
+  /* Colors */
+  --color-deep-space: var(--deep-space);
+  --color-space-lighter: var(--space-lighter);
+  --color-space-light: var(--space-light);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-green: var(--neon-green);
+  --color-glass-fill: var(--glass-fill);
+  --color-glass-border: var(--glass-border);
+  --color-glass-hover: var(--glass-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-ring: var(--ring);
+  
+  /* Spacing */
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-12: var(--space-12);
+  
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-glow-cyan: var(--shadow-glow-cyan);
+  --shadow-glow-purple: var(--shadow-glow-purple);
+  --shadow-glow-green: var(--shadow-glow-green);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+
+  h1 {
+    font-size: var(--text-4xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.4;
+  }
+
+  p {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  label {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    color: var(--text-primary);
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input, textarea {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+  
+  code, pre {
+    font-family: var(--font-mono);
+  }
+}
